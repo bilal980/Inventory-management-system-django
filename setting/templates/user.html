@@ -45,7 +45,7 @@ Setting
                             {% if object_list %}
                             {% for user in object_list %}
 
-                            {% if user.is_admin == False %}
+                            {% if user.is_superuser == False %}
                             <tr>
                                 <td><a href=""></a>{{ user.name|title }}</a></td>
                                 <td>{{ user.phone }}</td>
