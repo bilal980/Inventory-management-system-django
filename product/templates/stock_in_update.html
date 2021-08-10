@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block title %}
+Product
+{% endblock title %}
+{% block content %}
+{% include 'components/message.html' %}
+
+<div class="container-fluid">
+    <div class="col-md-12 shadow bg-white rounded">
+        <br>
+        <a href="{% url 'product' %}"><button type="button" id="back-product" class="btn btn-primary"
+                data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing">Products</button></a>
+        <a href="{% url 'stock_in_list' pk=object.product.id %}"><button type="button" id="stock-in"
+                class="btn btn-primary" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing">Stock
+                Details</button></a>
+        <br>
+        <div class="content-panel">
+            <h3 class="text-center">{{ object.product.name|title }} ({{ object.product.brand_name|title }}) |
+                <small>Stock
+                    Update Form</small> </h3>
+            <div class="panel-body">
+                <form class="form-horizontal product_item_form" action="#" method="post" autocomplete="off">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="">
+                                    <label><strong>Stock Quantity</strong></label>
+                                    <input type="text" class="form-control quantity" name="quantity" id="quantity"
+                                        value="{{ object.quantity }}" pattern="[0-9]*" required><br>
+                                </div>
+                                <div class="">
+                                    {% csrf_token %}
+                                    <label><strong>Buying Price / Item</strong></label>
+                                    <input type="text" class="form-control buying_price_item" name="buying_price_item"
+                                        id="buying_price_item" value="{{ object.buying_price_item|floatformat:-2 }}"
+                                        required><br>
+                                    <label><strong>Selling Price / Item</strong></label>
+                                    <input type="text" class="form-control price_per_item" name="price_per_item"
+                                        id="price_per_item" onkeyup="sum();"
+                                        value="{{ object.price_per_item|floatformat:-2 }}" required><br>
+                                    <label><strong>Date Stock In</strong></label>
+                                    <input type="date" class="form-control dated_order" name="dated_order"
+                                        value="{{ object.dated_order|date:'Y-m-d' }}"><br>
+                                    <input type="hidden" name="purchased_item" value="0">
+                                    <input type="hidden" name="product" value="{{ object.product.id }}">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="">
+                                    <label><strong>Total Buying Amount</strong></label>
+                                    <input type="text" class="form-control total_buying_amount"
+                                        name="total_buying_amount" id="total_buying_amount"
+                                        value="{{ object.total_buying_amount|floatformat:-2 }}" readonly><br>
+                                    <label><strong>Total Selling Amount</strong></label>
+                                    <input type="text" class="form-control total_amount" name="total_amount"
+                                        id="total_amount" value="{{ object.total_amount|floatformat:-2 }}" readonly><br>
+                                    <label><strong>Expiry Date</strong></label>
+                                    <input type="date" class="form-control stock_expiry" name="stock_expiry"
+                                        value="{{ object.stock_expiry|date:'Y-m-d' }}"><br>
+                                </div>
+                                <button type="submit" id="save" class="btn btn-primary product-sub-btn"
+                                    style="float: right" id="load"
+                                    data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing Order">Save
+                                    Stock</button>
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

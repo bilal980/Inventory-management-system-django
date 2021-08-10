@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}
+Ledger
+{% endblock title %}
+{% block content %}
+{% include 'components/message.html' %}
+
+<div class="container-fluid">
+<div class="col-md-6 shadow bg-white rounded">
+    <br>
+    <a href="{% url 'customer_ledger_list' %}"><button type="button" id="back-customer" class="btn btn-primary"
+            id="load" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing">Ledger
+            List</button></a>
+    <br>
+    <div class="content-panel">
+        <h3 class="text-center">{{ customer.customer_name }} <small>New Ledger</small></h3>
+        <div class="panel-body">
+            <form class="form-horizontal new_ledger"action="{% url 'add_ledger' pk=customer.id %}"
+                method="post" autocomplete="off">
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        {% csrf_token %}
+                        <label><strong>Amount</strong></label>
+                        <span class="amount-error" style="color: red; display: none">This Field is Requried</span>
+                        <input type="text" class="form-control amount" name="amount" placeholder="Amount" title="Please Enter Valid Amount" pattern="[0-9]*" required><br>
+                        <label><strong>Date</strong></label>
+                        <span class="date-error" style="color: red; display: none">This Field is Requried</span>
+                        <input type="date" class="form-control date" value="{% now 'Y-m-d'%}" name="dated"><br>
+                        <label><strong>Description</strong></label>
+                        <span class="description-error" style="color: red; display: none">This Field is Requried</span>
+                        <textarea maxlength="500" rows="4" name="description" class="form-control description"
+                            placeholder="Description"></textarea> <br>
+                        <input type="hidden" name="customer" value="{{ customer.id }}">
+                        <!-- <input type="hidden" name="retailer" value="{{ request.user.retailer_user.retailer.id }}"> -->
+                        <button type="submit" id="save" class="btn btn-primary ledger-submit-btn" style="float: right"
+                            data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing Order">Save
+                            Ledger</button>
+                            <br>
+                            <br>
+
+                    </div>
+                </div>
+            </form>
+        </div></div>
+    </div>
+</div>
+
+
+{% endblock %}

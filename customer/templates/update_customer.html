@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}
+Customer
+{% endblock title %}
+{% block content %}
+{% include 'components/message.html' %}
+
+<div class="container-fluid">
+<div class="col-md-6 shadow bg-white rounded">
+    <br>
+    <a href="{% url 'customer' %}"><button type="button" id="back-customer" class="btn btn-primary" id="load"
+            data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing"> Customer List</button></a>
+    <div class="content-panel">
+        <h3 class="text-center">Edit Customer</h3>
+        <div class="panel-body">
+            <form class="form-horizontal" action="{% url 'update_customer' pk=object.id %}" method="post"
+                autocomplete="off">
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        {% csrf_token %}
+                        <label><strong>Cutomer Name</strong></label>
+                        <input type="text" class="form-control customer_name" name="customer_name"
+                            placeholder="Customer Name" value="{{ object.customer_name }}"  required><br>
+                        <label><strong>Cutomer Phone</strong></label>
+                        <input type="text" class="form-control customer_phone" name="customer_phone"
+                            onkeyup="checkDec(this);" placeholder="Customer Phone"
+                            value="{{ object.customer_phone }}"><br>
+                        <label><strong>shop Name</strong></label>
+                        <input type="text" class=" form-control shop" name="shop"
+                            placeholder="Customer Shop Name (Optional)"
+                            value="{% if object.shop %}{{ object.shop }}{% endif %}"><br>
+                        <label><strong>Address</strong></label>
+                        <textarea name="address" class="form-control address"
+                            placeholder="Customer Address (Optional)">{% if object.address %}{{ object.address }}{% endif %}</textarea><br>
+                        <button type="submit" class="btn btn-primary product-sub-btn" style="float: right">Update Customer</button>
+                            <br>
+                            <br>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div></div>
+</div>
+
+   {% endblock %}

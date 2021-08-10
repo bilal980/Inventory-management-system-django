@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+{% load cache %}
+{% block head %}{% endblock head %}
+{% load static %}
+{% block title %}
+Sale
+{% endblock title %}
+
+{% block content %}
+{% include 'components/message.html' %}
+
+<div class="container-fluid ">
+    <div class="col-lg-12 col-md-12 col-sm-12  shadow bg-white rounded">
+        <br>
+        <a href="{% url 'sale' %}"><button type="button" id="invoice" class="btn btn-primary" id="load"
+                data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing">Invoice List</button></a>
+        <br>
+        <div class="content-panel" style="padding: 5px">
+            <div class="row" style="font-size: large">
+                <div class="col-xs-12 col-md-12">
+                    <div>
+                        <h2 class="text-center">Invoice</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-12">
+                <hr>
+                <div class="row">
+                    <div class="col-xs-6 col-md-6">
+                        <div><strong>Billed To:</strong> <span style="float: right">{% now "d F Y"%}</span></div><br>
+                        <div id="invalid_customer" class="">
+                           <small style="color: red; display: none;" > This field is required.</small>
+                        </div>
+                        <div class="customer_div">
+
+                            <select  class="custom-select" id="customer-id"  aria-label="Select Customer ">
+                                <option selected value="">Select Customer</option>
+                                {% for customer in customers %}
+                                <option value="{{ customer.id }}">{{customer.customer_name}}</option>
+                                {% endfor %}
+                            </select>
+                            <input hidden type="text" name="" id="check_customer" value="0">
+                                
+
+                            <div id="new_customer_div">     
+                                                           
+                            </div>
+
+                            <a style="color: #007bff;" type="button" class="new-customer" id='add_new_customer'
+                                style="cursor: pointer;">New Customer</a>
+                            <a style="color: #007bff;" type="button" class="new-customer" id='existing_customer'
+                                style="cursor: pointer;"></a>
+                        </div>
+                        <br>
+                        <div id="new-customer-form" class="new-customer-form" style="display: none">
+                           
+                            <input type="text" class="form-control customer_name" name="customer_name" placeholder="Customer Name"><br>
+                            <input type="number" class="form-control customer_phone" name="customer_phone" placeholder="Customer Phone"><br>
+                            <a class="added-customer" style="cursor: pointer;">Existing Customer</a><br><br>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                <tbody>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-right"><strong>Cash Payment</strong></td>
+                                        <td><input class="form-control" id="cash_payment" value="0" type="text"></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-right"><strong>Returned Cash</strong></td>
+                                        <td><span id="returned_cash">0</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-right"><strong>Received Amount</strong></td>
+                                        <td><input class="form-control" id="paidAmount" value="0" type="text"></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-right"><strong>Remaining Amount</strong></td>
+                                        <td><span id="remainingAmount">0</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-right"><strong>Sub Total</strong></td>
+                                        <td><span id='subtotal_price'>0.00</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-right"><strong>Discount</strong></td>
+                                        <td><input class="form-control" id="discount" value="0" type="text"></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-right"><strong>Shipping</strong></td>
+                                        <td><input class="form-control" id="shipping" value="0" type="text"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Total Qty: </strong><span id="totalQty"
+                                                style="color: red; font-weight: bold">0</span></td>
+                                        <td></td>
+                                        <td class="text-right"><strong>Grand Total</strong></td>
+                                        <td><span id="grandTotal" style="color:red">0</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4"></td>
+                                    </tr>
+                                   
+                                    <tr>
+                                        <td colspan="4"></td>
+                                    </tr>
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-12">
+                            <!-- <a style="width: 100%; font-size: large"  href="#" title="Create Invoice"
+                                class="btn btn-primary pull-right" id="load"
+                                data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing Order">Create
+                                Invoice</a> -->
+                            <button href="{% url 'sale' %}" id="create-invoice" class="btn btn-primary pull-right submit-invoice ">
+                                <span class="btn-primary" role="status" aria-hidden="true"></span>Save Invoice</button>
+                            <input type="hidden" name="" id="add_sale_href_post" value="{% url 'add_sale' %}">
+                            <button href="{% url 'add_sale_form' %}"  id="create_add_invoice" class="btn btn-primary pull-right submit-invoice">
+                                <span class="btn-primary" role="status" aria-hidden="true"></span>Save & Add Another</button>
+                        </div>
+                        <br>
+                    </div>
+                    <div class="col-xs-6 col-md-6">
+                        <small id="items_error_msg" style="color: red;display: none;">Please Add an items</small>
+                        <small id="price_error_msg" style="color: red;display: none;">Please Enter Valid Price</small>
+                        <div id="item-data-sc" class="table-responsive item-data-sc"
+                            style="height: 500px; overflow: scroll;">
+                            <table id='item_table' class="table table-bordered">
+                                <thead class="table-info">
+                                    <tr class="item-head">
+                                        <th>Item</th>
+                                        <th>Stock</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <datalist id="product-list">
+                                        {% for product in products %}
+                                        <option  data-id="{{ product.product.id }}" value="{{ product.product.id }}">{{product.product.name }}</option>
+                                        {% endfor %}
+                                    </datalist>
+                                    <div id="csrf">
+                                        {% csrf_token %}
+                                    </div>
+                                    <tr id="hiderow">
+                                        <td colspan="5">
+                                            <a id="addRow" href="javascript:;" title="Add Item"
+                                                class="btn btn-primary">Add Item</a> <span class="item-error"
+                                                style="color: red; display: none">please add Item</span>
+                                            <a id="deleteRow" href="javascript:;" title="Add Item"
+                                                class="btn btn-primary">Delete Item</a> <span class="item-error"
+                                                style="color: red; display: none">please add Item</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block scripts %}
+
+
+<script>
+
+    var product = [
+        {% for product in products %}
+    '{{ product }}',
+        {% endfor %}
+]
+
+
+</script>
+<script src="{%static 'sale.js'%}"></script>
+{% endblock scripts %}

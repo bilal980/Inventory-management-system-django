@@ -1,0 +1,322 @@
+{% extends 'base.html' %}
+{% load cache %}
+{% load static %}
+{% block head %}
+{% endblock head %}
+{% block title %}
+Dashboard
+{% endblock title %}
+{% block pageheading %}
+    Dashboard
+    <small><small>Overall Information</small></small>
+{% endblock pageheading %}
+{% block messages %}
+{% if messages %}
+    {% for message in messages %}
+<div class="row">
+    <div class="col-md-12">
+        <!-- ********** ALERT MESSAGE START******* -->
+        <div class="col-md-12">
+            <!-- ********** ALERT MESSAGE START******* -->
+            <div class="alert alert-success alert-dismissable text-center">
+                <!-- <a href="javascript:void()" class="close" data-dismiss="alert" aria-label="close">×</a> -->
+                <strong>{{message}}</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+            </div>
+            <!-- ********** ALERT MESSAGE END******* -->
+        </div> <!-- ********** ALERT MESSAGE END******* -->
+    </div>
+</div>
+    {% endfor %}
+{% endif %}
+
+{% endblock messages %}
+
+
+{% block content %}
+<!-- page script -->
+{% cache None dashboard %}
+
+
+{% if request.user.is_admin %}
+    
+<div class="row">
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box ">
+            <span class="info-box-icon bg-indigo"><i class="fa fa-money-bill"></i></span>
+            <div class="info-box-content">
+                <span class="text-bold text-uppercase">Total Purchase Due</span>
+                <span id='total_purchase_amount' class="info-box-number"></span>
+            </div>
+            <!-- /.info-box-content -->
+        </div>
+        <!-- /.info-box -->
+    </div>
+    <!-- /.col -->
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-gray"><i class="fa fa-money-bill-alt"></i></span>
+            <div class="info-box-content">
+                <span class="text-bold text-uppercase">Total Sales Due</span>
+                <span id='total_sales_due' class="info-box-number"></span>
+            </div>
+            <!-- /.info-box-content -->
+        </div>
+        <!-- /.info-box -->
+    </div>
+    <!-- /.col -->
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-green"><i class="fa fa-file-invoice-dollar"></i></span>
+            <div class="info-box-content">
+                <span class="text-bold text-uppercase">Total Sales Amount</span>
+                <span id='total_sale_amount' class="info-box-number"></span>
+            </div>
+            <!-- /.info-box-content -->
+        </div>
+        <!-- /.info-box -->
+    </div>
+    <!-- /.col -->
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-maroon"><i class="fa fa-money-check"></i></span>
+            <div class="info-box-content">
+                <span class="text-bold text-uppercase">Total Expense Amount</span>
+                <span id="total_expense" class="info-box-number"></span>
+
+            </div>
+            <!-- /.info-box-content -->
+        </div>
+        <!-- /.info-box -->
+    </div>
+    <!-- /.col -->
+</div>
+
+<div class="row">
+    <div class="col-lg-3 col-xs-6">
+        <div class="small-box bg-blue">
+            <div class="inner text-uppercase">
+                <h3 id="customer"></h3>
+                <p>Customers</p>
+            </div>
+            <div class="icon">
+                <i class="fa fa-users"></i>
+            </div>
+
+            <a href="{% url 'customer' %}" class="small-box-footer text-uppercase">View <i
+                    class="fa fa-arrow-circle-right"></i>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-xs-6">
+        <div class="small-box bg-purple">
+            <div class="inner text-uppercase">
+                <h3 id="supplier">{{supplier}}</h3>
+                <p>Suppliers</p>
+            </div>
+            <div class="icon">
+                <i class="fa fa-people-carry"></i>
+            </div>
+
+            <a href="{% url 'supplier' %}" class="small-box-footer text-uppercase">View <i
+                    class="fa fa-arrow-circle-right"></i>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-xs-6">
+        <div class="small-box bg-red">
+            <div class="inner text-uppercase">
+                <h3 id="purchase_invoice">{{purchase_invoice}}</h3>
+                <p>Purchase Invoice</p>
+            </div>
+            <div class="icon">
+                <i class="fa fa-cart-plus"></i>
+            </div>
+
+            <a href="{% url 'product' %}" class="small-box-footer text-uppercase">View <i
+                    class="fa fa-arrow-circle-right"></i>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-xs-6">
+        <div class="small-box bg-green">
+            <div class="inner text-uppercase">
+                <h3 id="sale_invoice"></h3>
+                <p>Sales Invoice</p>
+            </div>
+            <div class="icon">
+                <i class="fa fa-file-invoice-dollar"></i>
+            </div>
+
+            <a href="{% url 'sale' %}" class="small-box-footer text-uppercase">View <i
+                    class="fa fa-arrow-circle-right"></i>
+            </a>
+        </div>
+    </div>
+    <!-- fix for small devices only -->
+    <div class="clearfix visible-sm-block"></div>
+    <!-- /.col -->
+</div>
+{% endif %}
+
+
+<br><br>
+<div class=" container-fluid shadow bg-white rounded">
+
+
+<div class="row table-bordered">
+    <!-- /.row -->
+
+    <div class="col-md-5">
+        <div class="box box-primary">
+            <div class="box-header">
+                <h3 class="box-title text-uppercase">Recently Added Items</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body table-responsive">
+                <table id="recently_added_table" class=" datatable table table-bordered table-hover">
+                    <thead>
+                        <tr class="bg-blue">
+                            <th>#</th>
+                            <th>Item Name</th>
+                            <th>Item Sale Price</th>
+                           
+                        </tr>
+                    </thead>
+                    <tbody>
+                      
+                    </tbody>
+                    <tfoot>
+                            <tr>
+                                <td colspan="3" class="text-center"><a href="{% url 'all_stock_in' %}"
+                                        class="uppercase">View All</a></td>
+                            </tr>
+                        </tfoot>
+
+                </table>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+    </div>
+    <!-- /.col -->
+    <!-- /.col (LEFT) -->
+    <div class="col-md-7">
+        <div class="box box-primary">
+            <div class="box-header">
+                <h3 class="box-title text-uppercase">Stock Alert</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body table-responsive">
+                <table id="stock_alert_table" class="table table-bordered table-hover">
+                    <thead>
+                        <tr class="bg-blue">
+                            <th>#</th>
+                            <th>Category Name</th>
+                            <th>Item Name</th>
+                            <th>Stock</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+ 
+                    </tbody>
+
+                </table>
+                <div class="d-flex justify-content-end mb-2"><a href="{% url 'product' %}"><button type="button"
+                            class="btn btn-outline-primary">View More</button></a></div>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+
+    </div>
+    <!-- /.col (RIGHT) -->
+</div>
+<div class="row table-bordered">
+    <div class="col-md-5">
+        <div class="box box-primary">
+            <div class="box-header">
+                <br>
+                <h3 class="box-title text-uppercase">Recently Sales</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body table-responsive">
+                <table id="recently_sale_table" class=" datatable table table-bordered table-hover">
+                    <thead>
+                        <tr class="bg-blue">
+                            <th>#</th>
+                            <th>Customer Name</th>
+                            <th>quantity</th>
+                            <th>Grand Total</th>
+                            <th>Date</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+
+
+                </table>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+    </div>
+</div>
+
+</div>
+{% endcache dashboard %}
+{% endblock content %}
+
+
+{% block scripts %}
+
+
+
+<script>
+    $(document).ready(function(){
+
+        $.get('/dashboard/context/',function(data){
+            $('#total_purchase_amount').text('Rs ' + data['total_purchase_amount'])
+            $('#total_sales_due').text('Rs ' + data['total_sales_due'])
+            $('#total_sale_amount').text('Rs ' + data['total_sale_amount'])
+            $('#total_expense').text('Rs ' + data['total_expense'])            
+            $('#purchase_invoice').text(data['purchase_invoice'])
+            $('#sale_invoice').text(data['sale_invoice'])
+            $('#supplier').text(data['supplier'])
+            $('#customer').text(data['customer'])
+
+            rec_count=1
+            for(x in data['recently_added']){                
+                const item_name= data['recently_added'][x]['item_name']
+                const sale_price= data['recently_added'][x]['sale_price']
+                $('#recently_added_table tbody').append('<tr><td >' + rec_count + '</td ><td>' + item_name +'</td><td>' + sale_price + '</td></tr >')
+                    rec_count +=1
+                }
+                
+                var count=1
+            for(x in data['available_item_context']){
+                const name= data['available_item_context'][x]['item_name']
+                const brand_name= data['available_item_context'][x]['brand_name']
+                $('#stock_alert_table tbody').append('<tr><td>' + count + '</td><td>' +brand_name+'</td><td>'+name+'</td><td>'+x+'</td></tr>')
+                count += 1
+            }
+            rec_sale_count=1
+            for(x in data['recently_sales_list'] ){
+                cus_name= data['recently_sales_list'][x]['customer_name']
+                quantity= data['recently_sales_list'][x]['quantity']
+                gr_total= data['recently_sales_list'][x]['grand_total']
+                date= data['recently_sales_list'][x]['date']
+                $('#recently_sale_table tbody').append('<tr> <td>'+rec_sale_count +'</td><td>'+cus_name+'</td><td>'+quantity +'</td><td>'+gr_total +'</td><td>'+date + '</td> </tr>')
+                rec_sale_count +=1
+            }
+
+        })
+
+
+    })
+
+</script>
+{% endblock scripts %}
+

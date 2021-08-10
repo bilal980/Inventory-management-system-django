@@ -1,0 +1,222 @@
+{% extends 'base.html' %}
+{% block head %}{% endblock head %}
+{% load static %}
+{% block title %}
+Sale
+{% endblock title %}
+
+{% block content %}
+{% include 'components/message.html' %}
+
+<div class="container-fluid ">
+    <div class="col-lg-12 col-md-12 col-sm-12  shadow bg-white rounded">
+        <br>
+        <a href="{% url 'sale' %}"><button type="button" id="invoice" class="btn btn-primary" id="load"
+                data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing">Invoice List</button></a>
+        <br>
+        <div class="content-panel" style="padding: 5px">
+            <div class="row" style="font-size: large">
+                <div class="col-xs-12 col-md-12">
+                    <div>
+                        <h2 class="text-center">Invoice</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-12">
+                <hr>
+                <input type="hidden" name="invoice_id" id="invoice_id" value="{{invoice.id}}">
+                <div class="row">
+                    <div class="col-xs-6 col-md-6">
+                        <div><strong>Billed To:</strong> <span style="float: right">{{invoice.created_at}}</span></div><br>
+                        <div id="invalid_customer" class="">
+                            <small style="color: red; display: none;"> This field is required.</small>
+                        </div>
+                        <div class="customer_div">
+
+                            <select class="custom-select" id="customer-id" aria-label="Select Customer ">
+                                <option value="">Select Customer</option>
+                                <!-- <option selected value="">Select Customer</option> -->
+                                {% for customer in customers %}
+
+                                {% if customer == invoice.customer %}                                
+                                <option selected value="{{ customer.id }}">{{customer.customer_name}}</option>
+                                {% else %}
+                                <option value="{{ customer.id }}">{{customer.customer_name}}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                            <input hidden type="text" name="" id="check_customer" value="0">
+
+                            <div id="new_customer_div">
+
+                            </div>
+
+                            <a style="color: #007bff;" type="button" class="new-customer" id='add_new_customer'
+                                style="cursor: pointer;">New Customer</a>
+                            <a style="color: #007bff;" type="button" class="new-customer" id='existing_customer'
+                                style="cursor: pointer;"></a>
+                        </div>
+                        <br>
+                        
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                <tbody>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-right"><strong>Cash Payment</strong></td>
+                                        <td><input class="form-control" id="cash_payment" value="{{invoice.cash_payment}}" type="text"></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-right"><strong>Returned Cash</strong></td>
+                                        <td><span id="returned_cash">{{invoice.returned_payment}}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-right"><strong>Received Amount</strong></td>
+                                        <td><input class="form-control" id="paidAmount" value="{{invoice.paid_amount}}" type="text"></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-right"><strong>Remaining Amount</strong></td>
+                                        <td><span id="remainingAmount">{{invoice.remaining_payment}}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-right"><strong>Sub Total</strong></td>
+                                        <td><span id='subtotal_price'>{{invoice.sub_total}}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-right"><strong>Discount</strong></td>
+                                        <td><input class="form-control" id="discount" value="{{invoice.discount}}" type="text"></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-right"><strong>Shipping</strong></td>
+                                        <td><input class="form-control" id="shipping" value="{{invoice.shipping}}" type="text"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Total Qty: </strong><span id="totalQty"
+                                                style="color: red; font-weight: bold">{{invoice.total_quantity}}</span></td>
+                                        <td></td>
+                                        <td class="text-right"><strong>Grand Total</strong></td>
+                                        <td><span id="grandTotal" style="color:red">{{invoice.grand_total}}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4"></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td colspan="4"></td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-12">
+                            <input type="hidden" name="" id="update_sale_href_post" value="{% url 'update_invoice' %}">
+                            <!-- <a style="width: 100%; font-size: large"  href="#" title="Create Invoice"
+                                class="btn btn-primary pull-right" id="load"
+                                data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing Order">Create
+                                Invoice</a> -->
+                            <button href="{% url 'sale' %}" id="update-invoice"
+                                class="btn btn-primary pull-right submit-invoice ">
+                                <span class="btn-primary" role="status" aria-hidden="true"></span>
+                                Update Invoice
+                            </button>
+                            
+                        </div>
+                        <br>
+                    </div>
+                    <div class="col-xs-6 col-md-6">
+                        <small id="items_error_msg" style="color: red;display: none;">Please Add an items</small>
+                        <small id="price_error_msg" style="color: red;display: none;">Please Enter Valid Price</small>
+                        <div id="item-data-sc" class="table-responsive item-data-sc"
+                            style="height: 500px; overflow: scroll;">
+                            <table id='item_table' class="table table-bordered">
+                                <thead class="table-info">
+                                    <tr class="item-head">
+                                        <th>Item</th>
+                                        <th>Stock</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    {% for pr in invoice.purchased_items.all %}
+                                    <tr class="item-row">
+                                        <td id="item-name" class="item-name"><input data-id="" autofocus onfocusout='fetch_()' onselect='fetch_()'
+                                                id="items_name" value="{{pr.product.name}}" class="custom-select" list="product-list" placeholder="item"
+                                                type="text"></td>
+                                        <td class="stock" aria-readonly="true"></td>
+                                        <td><input id="price_" class="form-control" placeholder="Price" value="{{pr.price}}" type="text" readonly> </td>
+                                        <td><input class="form-control" size="1" id="quantity_" placeholder="Quantity" onkeyup=price_control()
+                                                value="{{pr.quantity}}" type="text"></td>
+                                        <td><span id="total_" class="total"></span></td>
+                                    </tr>
+                                    {% endfor %}
+                                    {% for ex in invoice.extra_items.all %}
+                                    <tr class="item-row">
+                                        <td id="item-name" autocomplete="off" class="item-name"><input data-id="" autofocus onfocusout='fetch_()'
+                                                onselect="fetch_()" id="items_name" value="{{ex.item_name}}" class="custom-select" list="product-list"
+                                                placeholder="item" type="text"></td>
+                                        <td class="stock" aria-readonly="true"></td>
+                                        <td><input id="price_" class="form-control" placeholder="Price" value="{{ex.price}}" type="text" readonly> </td>
+                                        <td><input class="form-control" size="1" id="quantity_" placeholder="Quantity" onkeyup="price_control()"
+                                                value="{{ex.quantity}}" type="text"></td>
+                                        <td><span id="total_" class="total"></span></td>
+                                    </tr>
+                                    {% endfor %}
+
+                                    <datalist id="product-list">
+
+                                    {% for product in products %}
+                                    <option data-id="{{ product.product.id }}" value="{{ product.product.id }}">{{product.product.name }}</option>
+                                    {% endfor %}
+                                    </datalist>
+                                    <div id="csrf">
+                                        {% csrf_token %}
+                                    </div>
+                                    <tr id="hiderow">
+                                        <td colspan="5">
+                                            <a id="addRow" href="javascript:;" title="Add Item"
+                                                class="btn btn-primary">Add Item</a> <span class="item-error"
+                                                style="color: red; display: none">please add Item</span>
+                                            <a id="deleteRow" href="javascript:;" title="Add Item"
+                                                class="btn btn-primary">Delete Item</a> <span class="item-error"
+                                                style="color: red; display: none">please add Item</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block scripts %}
+
+
+<script>
+
+
+</script>
+<script src="{%static 'sale.js'%}"></script>
+{% endblock scripts %}

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Setting
+{% endblock title %}
+
+{% block content %}
+{% include 'components/message.html' %}
+
+<div class="container">
+    <div class="col-md-6 shadow bg-white rounded">
+        <br>
+       
+        <div class="content-panel">
+            <h3 class="text-center">Update Profile</h3>
+            <div class="panel-body">
+                <div class="text-center">
+                    <img height="100px" src="/{{request.user.picture}}" class="img-circle elevation-1" alt="...">
+                </div>
+                <form class="form-horizontal" enctype="multipart/form-data" action="{% url 'update_user' pk=requst.user.id %}"
+                    method="post" autocomplete="off">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            {% csrf_token %}
+                            <label><strong>User Email</strong></label>
+                            <input type="email" class="form-control user_email" name="email" placeholder="User Email"
+                                value="{{ request.user.email }}"><br>
+
+                            <label><strong>New Password</strong></label>
+                            <input type="password" class="form-control password" name="password" placeholder="Password"
+                                value=""><br>
+
+                            <label for="picture_p">Picture</label>
+                            <input type="file" class="form-control-file" name="picture" id="picture_p">
+
+                            <button type="submit" class="btn btn-primary product-sub-btn" style="float: right">Update
+                                User</button>
+                            <br>
+                            <br>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

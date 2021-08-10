@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Supplier
+{% endblock title %}
+
+
+{% block content %}
+{% include 'components/message.html' %}
+
+<div class="container-fluid">
+    <div class="col-md-6 shadow mt-2 pb-5 mb-1 bg-white rounded">
+        <br>
+    <a href="{% url 'supplier' %}"><button id="back-customer" type="button" class="btn btn-primary" id="load"
+            data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing">Supplier List</button></a>
+
+        <br>
+        <div class="content-panel">
+            <h3 class="text-center">Create New Supplier</h3>
+            <div class="panel-body">
+                <form class="form-horizontal add-customer-form" action="#" method="post" autocomplete="off">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            {% csrf_token %}
+                            <label><strong>Supplier Name</strong></label>
+                            <span class="customer_name_error" style="color:red; display:none">This field is
+                                required..</span> 
+                                <input type="text" class="form-control supplier_name" name="name" placeholder="Supplier Name" required minlength="3">
+                            <br>
+                            <label><strong>Supplier Phone</strong></label>
+                            <span class="customer_exisit" style="color: red; display: none">Customer With this Phone
+                                Number
+                                Already exists.</span>
+                            <span class="customer_phone_error" style="color:red; display:none">This field is
+                                required..</span> 
+                                <input type="text" class="form-control supplier_phone" name="phone" maxlength="20" placeholder="Supplier Phone" required minlength="11">
+                            <br>
+                            <label><strong>CNIC</strong></label>
+                                <input type="number" class="form-control supplier_phone" name="CNIC" maxlength="20" title='Please Enter Valid CNIC Do not Use Dashes'  placeholder="Supplier Phone"  minlength="13">
+                            <br>
+                            <!-- <input type="hidden" name="retailer" value="{{ request.user.retailer_user.retailer.id }}"> -->
+                            <button type="submit" class="btn btn-primary product-sub-btn" style="float: right"
+                                data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing Order">Save
+                                Supplier</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

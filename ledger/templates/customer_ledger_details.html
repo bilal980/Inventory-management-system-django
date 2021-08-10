@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% block title %}
+Ledger
+{% endblock title %}
+{% block content %}
+{% include 'components/message.html' %}
+
+<div class="container-fluid">
+<div class="col-md-8 shadow bg-white rounded">
+<br>
+<a href="{% url 'customer_ledger_list'%}"><button type="button" id="back-customer" class="btn btn-primary"
+        id="load" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing">Ledger List</button></a>
+<a href="{% url 'add_ledger' customer.id %}"><button type="button" id="ledger-customer"
+        class="btn btn-primary" id="load" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing">Add
+        New Ledger</button></a>
+<a href="{% url 'add_payment' customer.id %}"><button type="button" id="payment-customer"
+        class="btn btn-primary" id="load" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing">Add
+        payment</button></a>
+<br><br>
+<div class="container">
+    <div class="row">
+        <div class="content-panel">
+            <div class="panel-body table-responsive">
+                <h2 class="text-center">{{ customer.customer_name|title }} <small>Ledger Detail</small></h2>
+                <hr>
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div style="float: right; padding: 12px; font-size: 20px">
+                        <strong style="float: right">Total Remaining Amount: <span style="color: red">{{remaining_amount|floatformat:-2 }}</span></strong>
+                    </div>
+                    <table
+                        class="table table-striped table-advance table-bordered table-hover ledger-table table-responsive">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Date</th>
+                                <th class="text-center">Amount</th>
+                                <th class="text-center">Payment Amount</th>
+                                <th class="text-center">Invoice</th>
+                                <th class="text-center">Description</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="item-table-body text-center">
+                            
+                            {% if ledgers %}
+                                                                
+                            {% for ledger in ledgers %}
+                            <tr>
+                                <td>{{ ledger.dated }}</td>
+                                <td>{{ ledger.amount|floatformat:-2}}</td>
+                                <td>{{ ledger.payment|floatformat:-2}}</td>
+                                <td>{{ ledger.invoice.receipt_no }} Bill</td>
+                                <td>{{ ledger.description }}</td>
+                                <td>
+                                    <button class="btn btn-danger btn-xs delete" data-toggle="modal" data-target="#deletemodal"><i
+                                            class="fa fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            {% block include %}
+                            <a href="{% url 'delete_ledger' ledger.id as q %}"></a>
+                            {% include 'components/delete_modal.html' with delete_link=q %}
+                            
+                            {% endblock include %}
+                            {% endfor %}
+                            {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center">No Record Found</td>
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+
+                   <!-- pagination -->
+                        <nav aria-label="...">
+                            <ul class="pagination justify-content-end">
+                                <li class="page-item ">
+                                    <a {% if ledgers.has_previous %} href="?page={{ledgers.previous_page_number }}" {% else %}
+                                        disable {% endif %}>
+                                        <span class="page-link">Previous</span></a>
+                                </li>
+                                {% if ledgers.has_previous %}
+                                <li class="page-item"><a class="page-link"
+                                        href="?page={{ledgers.previous_page_number}}">{{ledgers.previous_page_number}}</a>
+                                </li>
+                                {% endif %}
+                                <li class="page-item active"><a class="page-link "
+                                        href="?page={{ledgers.number}}">{{ledgers.number}}</a></li>
+                        
+                                {% if ledgers.has_next %}
+                                <li class="page-item"><a class="page-link"
+                                        href="?page={{ledgers.next_page_number}}">{{ledgers.next_page_number}}</a></li>
+                                {% endif %}
+                        
+                        
+                                <li class="page-item">
+                        
+                                    <a class="page-link" {% if ledgers.has_next %} href="?page={{ledgers.next_page_number}}"
+                                        {% else %} disabled {% endif %}>Next</a>
+                                </li>
+                        
+                            </ul>
+                        </nav>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+<script>
+    $('#back-customer').on('click', function () {
+        var $this = $(this);
+        $this.button('loading');
+        setTimeout(function () {
+            $this.button('reset');
+        }, 5000);
+    });
+
+    $('#do-pay').on('click', function () {
+        var $this = $(this);
+        $this.button('loading');
+        setTimeout(function () {
+            $this.button('reset');
+        }, 5000);
+    });
+</script>
+{% endblock %}

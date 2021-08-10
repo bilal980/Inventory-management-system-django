@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Setting
+{% endblock title %}
+{% block content %}
+{% include 'components/message.html' %}
+
+<div class="container-fluid shadow bg-white border col-md-10">
+    <br>
+    <div class="row container justify-content-center">
+        <ul class="list-group list-group-horizontal-md ">
+            <a href="{% url 'general_setting' %}" id="general_setting"><li  class="list-group-item active">General Setting</li></a>
+            <a href="{% url 'user_setting' %}" id='user_setting'><li  class="list-group-item">User Setting</li></a>
+             <a href="{% url 'update_profile' pk=request.user.id %}" id ='update_profile' > <li  class="list-group-item">Update Profile</li></a>
+        </ul>
+    </div>
+    <!-- general setting container  -->
+    <div id="general_setting_div">
+    <hr>
+    <div class="container border">
+        <div class="col-md-4">
+            <form method='POST' enctype="multipart/form-data" action="{% url 'save_general_setting' %}">
+                <label for="business_name">Business Name</label>
+                <input id='business_name' name="Name" value="{{business_name}}" class="form-control" type="text"
+                    placeholder="{{business_name}}">
+                <br>
+                <!-- <div id='csrf_div'> -->
+                {% csrf_token %}
+                <!-- </div> -->
+                <label for="business_logo">Business Logo</label>
+                <input type="file" class="form-control-file" name="logo" id="business_logo">
+                <label for="currently_logo">Currnetly</label>
+                <a id="currently_logo" target="_blank" href="/{{business_logo}}"> {{business_logo}}</a>
+                <br>
+                <!-- <div class="custom-control custom-switch">
+        <input  value="dark" name='theme' type="checkbox" class="custom-control-input" id="theme_switch">
+        <label class="custom-control-label" for="theme_switch">Dark Theme</label>
+    </div> -->
+                <br>
+                <button type="submit" class="btn btn-primary">Save Setting</button>
+            </form>
+        </div>
+        <br>
+
+    </div>
+    <br>
+</div>
+
+    <!-- user setting -->
+<div id='user_setting_table' class="container">
+    <div class="container-fluid">
+        <div class="col-md-12 ">
+            <br>
+            <a href="{% url 'add_customer' %}"><button type="button" id="new-user" class="btn btn-primary" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing">Create User</button></a>
+            <br>
+            <h2 class="text-center">User List</h2>
+            
+            <hr>
+            <div class="content-panel table-responsive">
+                <table class="table table-striped table-bordered table-hover customer-table">
+                    <thead>
+                        <tr>
+                            <th class="text-center"><i class="fa fa-bullhorn"></i> Name</th>
+                            <th class="text-center"><i class="fa fa-question-circle"></i> Phone</th>
+                            <!-- <th class="text-center"><i class=" fa fa-bookmark"></i> Shop</th> -->
+                            <th class="text-center"><i class=" fa fa-edit"></i> Address</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="customer-table-body text-center">
+                        {% if object_list %}
+                        {% for customer in object_list %}
+                        <tr>
+                            <td><a href=""></a>{{ customer.customer_name|title }}</a></td>
+                            <td>{{ customer.customer_phone }}</td>
+                            <td>{{ customer.shop }}</td>
+                            <td>{{ customer.address }}</td>
+                            <td>
+                                <a href="{% url 'update_customer' pk=customer.id %}" title="Edit Customer"><button
+                                        class="btn btn-danger btn-xs"><i class="fa fa-edit "></i></button></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center">No Records Found</td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+    
+    
+                <!-- for pagination -->
+                {% include 'components/pagination.html' %}
+    
+    
+            </div>
+        </div>
+    </div>
+
+
+
+    
+</div>
+
+{% endblock content %}
+
+{% block scripts %}
+
+
+<script>
+$(document).ready(function(){
+    console.log( + $('#user_setting').attr('href'))
+    if(window.location.href == $('#user_setting').attr('href')){
+        console.log('yes')
+    }
+
+
+
+$('#user_setting_table').hide()
+
+$('#general_setting').click(function(){
+    $("#user_setting").children('li').removeClass('active')
+    $("#update_profile").children('li').removeClass('active')
+$("#general_setting").children('li').addClass('active')
+})
+
+$('#user_setting').click(function(){
+    
+    $('#general_setting_div').hide()
+    $('#user_setting_table').show()
+    $("#general_setting").children('li').removeClass('active')
+    $("#update_profile").children('li').removeClass('active')
+    $("#user_setting").children('li').addClass('active')
+    
+})
+
+$('#update_profile').click(function(){
+$("#update_profile").children('li').addClass('active')
+    $("#general_setting").children('li').removeClass('active')
+    $("#user_setting").children('li').removeClass('active')
+
+})
+
+})
+
+</script>
+
+
+<script>
+// $(document).ready(function(){
+// $.get('/theme/',function(data){
+//     if(data['theme']=='dark'){
+//         $('#theme_switch').prop('checked',true)
+//         $('#theme_switch').val(data['theme'])
+//     }else{
+//         $('#theme_switch').prop('checked', false)
+//         $('#theme_switch').val('light')
+//     }
+// })
+
+// $('#theme_switch').change(function(){
+//     val=$('#theme_switch').val()
+//     if(val=='dark'){
+//         $('#side_bar').removeClass('sidebar-' + val + '-primary')
+//         $('#navbar').removeClass('navbar-' + val + ' navbar-light')
+//         $('#theme_switch').val('light')
+//     }else{
+//         $('#side_bar').removeClass('sidebar-' + val + '-primary')
+//         $('#navbar').removeClass('navbar-' + val + ' navbar-light')
+//         $('#theme_switch').val('dark')
+//     }
+//     $.post('/theme/',{'theme': $('#theme_switch').val()},function(data){
+//         theme_=data['theme']
+//         $('#side_bar').addClass('sidebar-' + theme_ + '-primary')
+//         $('#navbar').addClass('navbar-' + theme_ + ' navbar-light')
+//     })
+
+// })
+// })
+
+// $('#save_general_setting').click(function(){
+//     data={}
+//     data['business_name']=$('#business_name').val()
+//     data['business_logo']=$('#business_logo').val()
+//     data['csrfmiddlewaretoken']=$('#csrf_div').children().val()
+//     console.log(data['csrfmiddlewaretoken'])
+
+//     $.post('/setting/save/',data,function(data){
+//         console.log('Data Posted Successfully!')
+//     })
+// })
+
+</script>
+{% endblock scripts %}

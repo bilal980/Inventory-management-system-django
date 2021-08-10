@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block title %}
+Product
+{% endblock title %}
+{% block content %}
+{% include 'components/message.html' %}
+
+<div class="container-fluid"></div>
+    <div class="col-md-12 shadow bg-white rounded">
+        <br>
+        <a href="{% url 'stock_in_list' pk=product.id %}"><button type="button" id="stock-in" class="btn btn-primary" id="load" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing">Stock In History</button></a>
+        <br>
+        <div class="content-panel">
+            <h3 class="text-center border-bottom"> Stock ({{ product.name }}) </h3>
+            <div class="panel-body">
+                <form class="form-horizontal product_item_form" action="{% url 'add_stock_in' pk=product.id %}" method="post" autocomplete="off">
+                    <div class="row form-group">
+                        <div class="col-6">
+                        <div class="">
+                            <label><strong>Stock Quantity</strong></label>
+                            <input type="text"  class="form-control quantity" onkeyup="total_()" name="quantity" id="quantity_" pattern="[0-9]*"  placeholder="Stock Quantity" required><br>
+                        </div>
+                        <div class="">
+                            {% csrf_token %}
+                            <label><strong>Buying Price / Item</strong></label>
+                            <input type="text"  class="form-control buying_price_item" onkeyup="total_()"  name="buying_price_item" id="buying_price_item" value="0" placeholder="Buying Price Per Item" required><br>
+                            <label><strong>Selling Price / Item</strong></label>
+                            <input type="text"  class="form-control price_per_item" onkeyup="total_()" name="price_per_item" id="price_per_item" value="0"  placeholder="Price Per Item" required><br>
+                        </div>
+                            <label><strong>Date Stock In</strong></label>
+                            <input type="text"  class="form-control dated_order" value="{% now 'Y-m-d'%}" name="dated_order"  placeholder="Date Stock In" onfocus="(this.type='date')" onblur="(this.type='text')"><br>
+                            <input type="hidden" name="purchased_item" value="0">
+                            <input type="hidden" name="product" value="{{ product.id }}">
+                        </div>
+                        <div class="col-6">
+                            <label><strong>Total Buying Amount</strong></label>
+                            <input type="text"  class="form-control total_buying_amount"  name="total_buying_amount"  id="total_buying_amount" placeholder="Total Buying Amount" readonly><br>
+                            <label><strong>Total Selling Amount</strong></label>
+                            <input type="text"  class="form-control total_amount"  name="total_amount"  id="total_amount" placeholder="Total Selling Amount" readonly><br>
+                            <label><strong>Expiry Date</strong></label>
+                            <input type="text"  class="form-control stock_expiry"  name="stock_expiry"  onkeyup="checkDec(this);" placeholder="Stock Expiry Date" onfocus="(this.type='date')" onblur="(this.type='text')"><br>
+                            <button type="submit" id="save" class="btn btn-primary product-submit-btn" style="float: right" id="load"
+                            data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing Order">Save Stock</button>
+                        </div>
+                            <br>
+                            <br>                    
+                        </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block scripts %}
+        
+
+<script>
+function total_(){
+    console.log('hii')
+    var item_buy= jQuery('#buying_price_item').val()
+    var item_sell= jQuery('#price_per_item').val()
+    var quantity_= jQuery('#quantity_').val()
+
+    var totalBuy = Number(quantity_) * Number(item_buy)
+    var totalsell=Number(quantity_) * Number(item_sell)
+
+    jQuery('#total_buying_amount').val(totalBuy);
+    jQuery('#total_amount').val(totalsell);
+
+}
+
+// $(document).ready(function(){
+
+// $('#')
+
+
+// })
+// </script>
+
+{% endblock scripts %}
+    
+
+
+
+
+

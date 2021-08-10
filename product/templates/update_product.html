@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}
+Product
+{% endblock title %}
+{% block content %}
+{% include 'components/message.html' %}
+
+<div class="col-md-6 shadow bg-white rounded">
+    <br>
+    <a href="{% url 'product' %}"><button type="button" id="back-product" class="btn btn-primary" id="load"
+            data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing">Product List</button></a>
+    <br>
+    <div class="content-panel">
+        <h3 class="text-center"> <small>Product Update Form</small></h3>
+        <div class="panel-body">
+            <form class="form-horizontal add-product-form" action="{% url 'product_update' pk=object.id %}"
+                method="post" autocomplete="off">
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        {% csrf_token %}
+                        <label><strong>Item Name</strong></label>
+                        <input type="text" class="form-control product_name" name="name" placeholder="Product Name"
+                            value="{{ object.name|title }}" required><br>
+                        <label><strong>Item Brand Name</strong></label>
+                        <input type="text" class="form-control brand_name" name="brand_name" placeholder="Brand Name"
+                            value="{{ object.brand_name|title }}" ><br>
+                        <label><strong>Item Unit Type</strong></label>
+                        <input type="text" class="form-control unit_type" name="unit_type" placeholder="Unit Type"
+                            list="unit-list" value="{{ object.unit_type }}">
+                        <datalist id="unit-list">
+                            <option value="Kilogram"></option>
+                            <option value="Gram"></option>
+                            <option value="Litre"></option>
+                            <option value="Quantity"></option>
+                        </datalist>
+                        <br>
+                        <label><strong>Item Barcode</strong></label>
+                        <input type="number" class="form-control bar_code" name="bar_code"
+                            value="{{ object.bar_code }}">
+                        <br>
+                        <input type="hidden" name="retailer" value="{{ request.user.retailer_user.retailer.id }}">
+                        <br>
+                        <button type="submit" id="save" class="btn btn-primary product-submit-btn"
+                            style="float: right">Update Item</button>
+                            <br>
+                            <br>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+
+    $('#back-product').on('click', function () {
+        var $this = $(this);
+        $this.button('loading');
+        setTimeout(function () {
+            $this.button('reset');
+        }, 5000);
+    });
+
+</script>
+{% endblock %}

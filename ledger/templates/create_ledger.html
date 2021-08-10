@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block title %}
+Ledger
+{% endblock title %}
+
+{% block content %}
+{% include 'components/message.html' %}
+
+<div class="container-fluid ">
+<div class="col-md-8 pl-3 pr-3 shadow bg-white rounded">
+    <br>
+    <a href="{% url 'customer_ledger_list' %}"><button type="button" id="back-customer" class="btn btn-primary" id="load" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing">Ledger List</button></a>
+    <br>
+    <div class="content-panel">
+                    
+        <h3 class="text-center border-bottom">{% if request.user.staff == none %} Admin {% else %}{{request.user.staff}}{% endif %} Customer / Ledger</h3>
+        <br>
+        <div class="panel-body">
+            <form class="form-horizontal add-ledger-form"  method="post" autocomplete="off">
+                <div class="form-group">
+<div class="row">
+                    <div class="ml-2 col-5">
+                        {% csrf_token %}
+                        <label><strong>Customer Name</strong></label>
+                        <span class="customer-existing" style="color: red; display: none" >Customer Already Exisit</span>
+                        <span class="customer-error" style="color: red; display: none" >this field is requried</span>
+                        <input type="text" class="form-control customer" name="customer_name" placeholder="Name" required title="Please Enter Valid Name" minlength="3" maxlength="30"><br>
+                        <label><strong>Customer phone</strong></label>
+                        <span class="customer-phone-error" style="color: red; display: none" >this field is requried</span>
+                        <input type="text" class="form-control customer_phone" name="customer_phone" placeholder="Phone"><br>
+                        <label><strong>Customer Type</strong></label>
+                        <span class="customer-type-error" style="color: red; display: none" >this field is requried</span>
+                        <input type="text" class="form-control customer_type" name="customer_type" placeholder="Person Type">
+                        <span style="color:#00ccff">For example: Retailer, WholeSale Dealer etc</span><br><br>
+                    </div>
+                    <div class="ml-2 col-6">
+                        <label><strong>Amount</strong></label>
+                        <span class="amount-error" style="color: red; display: none" >this field is requried</span>
+                        <input type="text" class="form-control amount" name="amount" placeholder="Amount" title="Please Enter Valid Amount" pattern="[0-9]*" required><br>
+                        <label><strong>Description</strong></label>
+                        <span class="description-error" style="color: red; display: none" >this field is requried</span>
+                        <textarea maxlength="500" rows="4" name="description" class="form-control description"  placeholder ="Description"></textarea> <br>
+                        <input type="hidden" name="retailer" value="{{ request.user.retailer_user.retailer.id }}">
+                        <button type="submit" id="save" class="btn btn-primary ledger-submit-btn" style="float: right" id="load" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing Order">Save Ledger</button>
+                        <br>
+                        <br>
+                    </div>
+</div>
+<br>
+                </div>
+            </form>
+        </div>
+    </div>
+</div></div>
+</div>
+{% endblock %}

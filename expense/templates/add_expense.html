@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% block title %}
+Expense
+{% endblock title %}
+{% block content %}
+{% include 'components/message.html' %}
+
+    <div class="col-md-6 shadow bg-white rounded">
+        <br>
+        <a href="{% url 'expense_list' %}"><button type="button" id="expense" class="btn btn-primary" id="load" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing">Expense List</button></a>
+        <br>
+        <div class="content-panel">
+            <h3 class="text-center">Add Expense</h3>
+            <div class="panel-body">
+                <form class="form-horizontal add-ledger-form" action="{% url 'add_expense' %}" method="post" autocomplete="off">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            {% csrf_token %}
+                            <label><strong>Amount</strong></label>
+                            <input type="text" class="form-control amount" name="amount" pattern="[0-9]*" title="Please Enter Valid Amount" placeholder="Amount" required><br>
+                            <label><strong>Description</strong></label>
+                            <textarea class="form-control description" name="description" placeholder="Description" maxlength="200" title="Not More Than 200 Charcters"></textarea><br>
+                            <label><strong>Date</strong></label>
+                            <input type="text" class="form-control date" value="{% now 'Y-m-d'%}" name="date" placeholder=" Date" onfocus="(this.type='date')" onblur="(this.type='text')"><br>
+                            <button type="submit" id="save" class="btn btn-primary ledger-submit-btn" style="float: right" id="load" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing Order">Save Expense</button>
+                            <br>
+                            <br>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        $('document').ready(function () {
+
+            $('.ledger-submit-btn').on ('click', function () {
+                $(this).addClass('disabled');
+                $(this).html('<i class="fa fa-circle-o-notch fa-spin"></i> Loading...');
+                var error = false;
+
+                if ($('.amount').val() ==""){
+                    $('.amount-error').show();
+                    error= true;
+                }
+                else {
+                    $('.amount-error').hide();
+                }
+                if ($('.description').val() ==""){
+                    $('.description-error').show();
+                    error= true;
+                }
+                else {
+                    $('.description-error').hide();
+                }
+
+                if ($('.date').val() =="" ) {
+                    $('.date-error').show();
+                    error = true;
+                }
+                else {
+                    $('.date-error').hide();
+                }
+                if (error == true ) {
+                    $(this).removeClass('disabled');
+                    $(this).html('Save');
+                    return;
+                }
+
+                if (error == false) {
+                    $('.add-ledger-form').submit();
+                }
+                 else {
+                     $(this).removeClass('disabled');
+                     $(this).html('Save');
+                     return;
+                 }
+            });
+
+            $('.customer').keyup(function () {
+                $('.customer-error').hide();
+            });
+
+
+            $('.customer_phone').keyup(function () {
+               $('.customer-phone-error').hide();
+               checkDec(this);
+            });
+            function checkDec(el){
+            var ex = /^[0-9]+\.?[0-9]*$/;
+            if(ex.test(el.value)==false){
+                el.value = el.value.substring(0,el.value.length - 1);
+            }
+        }
+            $('.amount').keyup(function () {
+               $('.amount-error').hide();
+                checkDec(this);
+            });
+            function checkDec(el){
+            var ex = /^[0-9]+\.?[0-9]*$/;
+            if(ex.test(el.value)==false){
+                el.value = el.value.substring(0,el.value.length - 1);
+            }
+        }
+            $('.description').keyup(function () {
+                $('.description-error').hide();
+            });
+        });
+
+    </script>
+<script>
+
+$('#expense').on('click', function() {
+    var $this = $(this);
+  $this.button('loading');
+    setTimeout(function() {
+       $this.button('reset');
+   }, 5000);
+});
+
+    </script>
+
+{% endblock %}

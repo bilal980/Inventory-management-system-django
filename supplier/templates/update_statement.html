@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}
+Supplier
+{% endblock title %}
+{% block content %}
+{% include 'components/message.html' %}
+
+<div class="col-md-6 shadow bg-white rounded">
+    <br>
+    <div class="content-panel">
+        <h3 class="text-center border-bottom"> Update Statement |{{supplier.name}}</h3>
+        <div class="panel-body">
+            <form class="form-horizontal add-ledger-form"
+                action="{% url 'update_statement' pk=object.id %}" method="post" autocomplete="off">
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        {% csrf_token %}
+                        <span class="name-error" style="color: red; display: none">this field is requried</span>
+                        <input type="hidden" class="form-control name" name="supplier" value="{{ object.supplier.id }}"
+                            placeholder="{{ object.supplier.id }}" readonly><br>
+                        <label><strong>Supplier Amount</strong></label>
+                        <input type="text" class="form-control father_name" name="supplier_amount"
+                            placeholder="{{object.supplier_amount}}" value="{{object.supplier_amount}}" pattern="[0-9]*" title="Please Enter Valid Amount" required><br>
+                        <label><strong>Payment Amount</strong></label>
+                        <input type="text" class="form-control mobile" name="payment_amount"
+                            placeholder="{{object.payment_amount}}" value="{{object.payment_amount}}"><br>
+                        <label><strong>description no</strong></label>
+                        <input type="text" class="form-control mobile" name="description"
+                            placeholder="{{object.description}}" value="{{object.description}}"><br>
+                        <label><strong>Date</strong></label>
+                        <input type="date" class="form-control mobile" name="date" placeholder="Date"><br>
+                        <button type="submit" id="save" class="btn btn-primary ledger-submit-btn" style="float: right"
+                            id="load"
+                            data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing Order">Save Statement</button>
+                            <br>
+                            <br>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% block title %}
+Ledger
+{% endblock title %}
+{% block content %}
+{% include 'components/message.html' %}
+
+<div class="container">
+
+<div class="col-md-6 shadow bg-white rounded">
+    <br>
+    <a href="{% url 'customer_ledger_list'%}"><button type="button" id="back-customer" class="btn btn-primary"
+            id="load" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing">Ledger
+            List</button></a>
+    <br>
+    <div class="content-panel">
+        <h3 class="text-center">{{ customer.customer_name }} <small>New Ledger</small></h3>
+        <div class="panel-body">
+            <form class="form-horizontal new_ledger" 
+                method="post" autocomplete="off">
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        {% csrf_token %}
+                        <label><strong>Payment Amount</strong></label>
+                        <span class="amount-error" style="color: red; display: none">This Field is Requried</span>
+                        <input type="text" class="form-control amount" name="payment" placeholder="Payment Amount" pattern="[0-9]*" title="Please Enter Valid Amount" required ><br>
+                        <label><strong>Date</strong></label>
+                        <span class="date-error" style="color: red; display: none">This Field is Requried</span>
+                        <input type="date" class="form-control date" value="{% now 'Y-m-d'%}" name="dated"><br>
+                        <label><strong>Description</strong></label>
+                        <span class="description-error" style="color: red; display: none">This Field is Requried</span>
+                        <textarea maxlength="500" rows="4" name="description" class="form-control description"
+                            placeholder="Description"></textarea> <br>
+                        <input type="hidden" name="customer" value="{{ customer.id }}">
+                        <input type="hidden" name="retailer" value="{{ request.user.retailer_user.retailer.id }}">
+                        <button type="submit" id="save" class="btn btn-primary ledger-submit-btn" style="float: right"
+                            data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing Order">Save
+                            Ledger</button>
+                            <br>
+                            <br>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+<script>
+    $('.document').ready(function () {
+        $('.ledger-submit-btn').on('click', function () {
+            $(this).addClass('disabled');
+            $(this).html('<i class="fa fa-circle-o-notch fa-spin"></i> Loading...');
+            var error = false;
+
+            if ($('.amount').val() == "") {
+                $('.amount-error').show();
+                error = true;
+            }
+            else {
+                $('.amount-error').hide();
+            }
+            if ($('.date').val() == "") {
+                $('.date-error').show();
+                error = true;
+            }
+            else {
+                $('.date-error').hide();
+            }
+            if ($('.description').val() == "") {
+                $('.description-error').show();
+                error = true;
+            }
+            else {
+                $('.description-error').hide();
+
+            }
+            if (error == false) {
+                $('.new_ledger').submit();
+            }
+            else {
+                $(this).removeClass('disabled');
+                $(this).html('Save Ledger');
+                return;
+            }
+
+        });
+    });
+
+    $('.amount').keyup(function () {
+        $('.amount-error').hide();
+        checkDec(this);
+    });
+    function checkDec(el) {
+        var ex = /^[0-9]+\.?[0-9]*$/;
+        if (ex.test(el.value) == false) {
+            el.value = el.value.substring(0, el.value.length - 1);
+        }
+    }
+    $('.description').keyup(function () {
+        $('.description-error').hide();
+    });
+
+
+</script>
+<script>
+    $('#back-customer').on('click', function () {
+        var $this = $(this);
+        $this.button('loading');
+        setTimeout(function () {
+            $this.button('reset');
+        }, 5000);
+    });
+</script>
+
+{% endblock %}

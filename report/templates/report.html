@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<div class="container-fluid ">
+
+  
+<br>
+<br>
+<div class="container-fluid shadow bg-white ">
+    <div class="content-panel" style="height:400px; overflow: auto;">
+        <br>
+        <h4 class="text-center"><strong>Daily Reports</strong></h4><br>
+
+        <table class="table table-striped table-advance table-hover daily-sales-table table-bordered">
+            <thead>
+                <tr>
+                    <th><i class=""></i>Date</th>
+                    <th><i class=""></i>Sales</th>
+                    <th><i class=""></i>Profit</th>
+                </tr>
+            </thead>
+            <tbody class="daily-sales-tbody">
+            </tbody>
+        </table>
+    </div>
+</div>
+  
+<br>
+<br>
+<div class="container-fluid shadow bg-white ">
+    <div class="content-panel" style="height:400px; overflow: auto;">
+        <h4 class="text-center"><strong>Weekly Reports</strong></h4><br>
+        <table class="table table-striped table-advance table-hover weekly-sales-table table-bordered">
+            <thead>
+                <tr>
+                    <th><i class=""></i>Date</th>
+                    <th><i class=""></i>Sales</th>
+                    <th><i class=""></i>Profit</th>
+                </tr>
+            </thead>
+            <tbody class="daily-sales-tbody">
+            </tbody>
+        </table>
+    </div>
+</div>
+  
+<br>
+<br>
+<div class="container-fluid shadow bg-white ">
+    <div class="content-panel" style="height:400px; overflow: auto;">
+        <h4 class="text-center"><strong>Monthly Reports</strong></h4><br>
+        <table class="table table-striped table-advance table-hover monthly-sales-table table-bordered">
+            <thead>
+                <tr>
+                    <th><i class=""></i>Date</th>
+                    <th><i class=""></i>Sales</th>
+                    <th><i class=""></i>Profit</th>
+                </tr>
+            </thead>
+            <tbody class="daily-sales-tbody">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<br>
+<hr>
+
+
+</div>
+{% endblock content %}
+
+
+
+{% block scripts %}
+   <script>
+       $(document).ready(function(){
+
+       $.get('/report/daily/api/', function(result, status){
+
+    var sales = [];
+    var profit = [];
+    var sales_date = [];
+
+    $.each(result.sales_data, function(index, value){
+
+        $('.daily-sales-tbody').append('<tr><td>'+ value.date + '</td><td>' + value.sales + '</td><td>' + value.profit + '</td></tr>');
+
+        sales.push(value.sales);
+        profit.push(value.profit);
+        sales_date.push(value.date);
+
+    });
+  
+});
+    
+        $.get('/report/weekly/api/', function (result, status) {
+            var sales = [];
+            var profit = [];
+            var sales_date = [];
+
+            $.each(result.sales_data, function (index, value) {
+
+                $('.weekly-sales-tbody').append('<tr><td>' + value.date + '</td><td>' + value.sales + '</td><td>' + value.profit + '</td></tr>');
+                sales.push(value.sales);
+                profit.push(value.profit);
+                sales_date.push(value.date);
+            });
+
+        })
+
+        $.get('/report/monthly/api/', function (result, status) {
+            var sales = [];
+            var profit = [];
+            var day = [];
+            $.each(result.sales_data, function (index, value) {
+                $('.monthly-sales-tbody').append('<tr><td>' + value.day + '</td><td>' + value.sales + '</td><td>' + value.profit + '</td></tr>');
+
+
+                sales.push(value.sales);
+                profit.push(value.profit);
+                day.push(value.day);
+            });
+
+        })
+
+
+           })
+   </script> 
+{% endblock scripts %}

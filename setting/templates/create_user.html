@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% block title %}
+Setting
+{% endblock title %}
+{% block content %}
+{% include 'components/message.html' %}
+
+<div class="container-fluid">
+    <div class="col-md-8 shadow bg-white rounded">
+        <br>
+        <a href="{% url 'user_setting' %}"><button id="back-User" type="button" class="btn btn-primary" id="load"
+                data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing">User List</button></a>
+        <br>
+        <div class="content-panel">
+            <h3 class="text-center">Add New User</h3>
+            <hr>
+            <div class="panel-body">
+                <form id="create_user_form" class="form-horizontal add-User-form" enctype="multipart/form-data" action="{% url 'create_user' %}" method="post"
+                    autocomplete="off">
+                    <div class="form-group">
+                            <div class="row">
+                            <div class="col-5 ml-2">
+                            {% csrf_token %}
+                            <label><strong>Email</strong></label>
+                            <input id='email' type="email" class="form-control email" name="email" placeholder="Email" required><br>
+                            <label><strong>Name</strong></label>
+                            <input id='username' type="text" class="form-control name" name="username" placeholder="Name (Optional)" ><br>
+                            <label><strong>Phone</strong></label>
+                            <input id='phone' type="number" class="form-control phone" name="phone" placeholder="Phone (Optional)" ><br>
+                            </div>
+                            <div class="col-5 ml-2">
+                            <label><strong>Password</strong></label>
+                            <input type="password" class="form-control User_name" name="password" id="password1"
+                                placeholder="Password" required><br>
+
+                                <label><strong>Confirm Password</strong></label>
+                                <small id="passworderror" style="display: none;color: red;">Password Not Match!</small>
+                            <input type="password" class="form-control User_name" name="password2" id='password2'
+                                placeholder="Confirm Password" required><br>
+                            <label for="picture_p">Picture</label>
+                            <input type="file" class="form-control-file" name="picture" id="picture_p">
+                            <br>
+                            <button id='saveuser' class="btn btn-primary product-sub-btn" style="float: right"  data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing Order">Save User</button>
+                        </div>
+                    </div>
+                    <br>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+{% endblock %}
+
+
+{% block scripts %}
+    <script>
+        $(document).ready(function(){
+        
+            $('#email').keyup(function () {
+                $('#email').removeClass('is-invalid')
+            })
+            $('#password1').keyup(function () {
+                $('#password1').removeClass('is-invalid')
+                $('#password2').removeClass('is-invalid')
+            })
+
+            $('#password2').keyup(function () {
+                $('#password1').removeClass('is-invalid')
+                $('#password2').removeClass('is-invalid')
+                $('#passworderror').hide()
+            })
+
+
+            $("#employe-id").select(function () {
+                selected_value = $(this).val();
+                for (var i = 0; i < $("#employe-list").find("option").length; i += 1) {
+                    cus = $("#employe-list").find("option").eq(i).attr('data-id');
+                    if (cus == selected_value) {
+
+                        $('#employe-id').val($("#employe-list").find("option").eq(i).text())
+                        $("#employe_id").val(selected_value)
+                        break;
+                    }
+                }
+            });
+          
+            
+            $("#saveuser").click(function(){
+                
+                if(!(document.getElementById('email').checkValidity())){
+                    $("#email").addClass('is-invalid')
+                    $("#email").focus()
+                    return false
+                }
+                if(!(document.getElementById('password1').checkValidity())){
+                    $("#password1").addClass('is-invalid')
+                    $("#password1").focus()
+                    return false
+                }
+                if(!(document.getElementById('password2').checkValidity())){
+                    $("#password2").addClass('is-invalid')
+                    $("#password2").focus()
+                    return false
+                }
+
+                if($('#password2').val() != $('#password1').val()){
+                    $('#password2').addClass('is-invalid')
+                    $('#passworderror').show()
+                    $('#password2').focus()
+                    return false
+
+                }
+                else{
+                    $('#create_user_form').submit()
+                }
+            })
+
+
+
+        })
+
+    </script>
+
+{% endblock scripts %}
+    

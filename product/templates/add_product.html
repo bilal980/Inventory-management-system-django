@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% block title %}
+Product
+{% endblock title %}
+{% block content %}
+{% include 'components/message.html' %}
+
+<div class="row container-fluid shadow bg-white rounded"> 
+<div class="col-md-6 ">
+    <br>
+    <a href="{% url 'product' %}"><button type="button" id="back-product" class="btn btn-primary"
+            id="load" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing">Product List</button></a>
+    <br>
+    <div class="content-panel">
+        <h3 class="text-center">Add Product</h3>
+        <div class="panel-body">
+            <form class="form-horizontal add-product-form"  action="{% url 'add_product'  %}" method="post" autocomplete="off">
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        {% csrf_token %}
+                        <label><strong>Product Name</strong></label>
+                        <input type="text" class="form-control product_name" id='product_name' name="name" placeholder="Product Name"  maxlength="100" required  title="Please Enter Valid Name Do Not Use More than 50 Characters"><br>
+                        <label><strong>Brand Name</strong></label>
+                        <input id='brand_name' type="text" class="form-control brand_name" name="brand_name"
+                            placeholder="Brand Name"><br>
+                        <label><strong>Unit Type</strong></label>
+                        <input type="text" class="form-control custom-select" id='unit_type' name="unit_type" placeholder="Unit Type"
+                            list="unit-list">
+                        <datalist id="unit-list">
+                            <option value="Kilogram"></option>
+                            <option value="Gram"></option>
+                            <option value="Litre"></option>
+                            <option value="Quantity"></option>
+                        </datalist>
+                        <br>
+                        <label><strong>Bar Code</strong></label>
+                        <input id='bar_code' type="number" class="form-control bar_code" name="bar_code" placeholder="Bar Code">
+                        <span style="color: #68dff0">For example: 1234567899876 (13 digit number)</span><br><br>
+                        
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
+<div class="col-md-6 ">
+    <br>
+    <div class="content-panel">
+        <h3 class="text-center">Stock In</h3>
+        <div class="panel-body">            
+                <div class="form-group">
+                    <div class="">
+                        <label><strong>Stock Quantity</strong></label>
+                        <input type="text" class="form-control  quantity" onkeyup="total_()" name="quantity"
+                            id="quantity_" placeholder="Stock Quantity" required pattern="[0-9]*"><br>
+                    </div>
+                    <div class="">
+                        <label><strong>Buying Price / Item</strong></label>
+                        <input type="text" class="form-control buying_price_item" onkeyup="total_()"
+                            name="buying_price_item" id="buying_price_item" placeholder="Buying Price Per Item" ><br>
+                        <label><strong>Selling Price / Item</strong></label>
+                        <input type="text" class="form-control price_per_item" onkeyup="total_()" name="price_per_item"
+                            id="price_per_item" placeholder="Price Per Item"><br>
+                        <label><strong>Date Stock In</strong></label>
+                        <input type="text" class="form-control dated_order" id="dated_order" value="{% now 'Y-m-d'%}" name="dated_order"
+                            placeholder="Date Stock In" onfocus="(this.type='date')" onblur="(this.type='text')"><br>
+                    </div>
+                    <div class="col-sm-12">
+                        <input type="hidden" class="form-control total_amount" name="total_amount" id="total_amount"
+                            placeholder="Total Selling Amount">
+                        <input  type="hidden" class="form-control total_buying_amount" name="total_buying_amount"
+                            id="total_buying_amount" placeholder="Total Buying Amount" >
+
+                        <label><strong>Expiry Date</strong></label>
+                        <input type="text" class="form-control stock_expiry" name="stock_expiry" id="stock_expiry"
+                             placeholder="Stock Expiry Date" 
+                            ><br>
+                    </div>
+                        <button type="submit"  id="save" class="btn btn-primary product-submit-btn" style="float: right"
+                        id="load" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing Order">Save Stock</button>
+                    <br>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+    function total_() {
+        var item_buy = jQuery('#buying_price_item').val()
+        var item_sell = jQuery('#price_per_item').val()
+        var quantity_ = jQuery('#quantity_').val()
+        var totalBuy = Number(quantity_) * Number(item_buy)
+        var totalsell = Number(quantity_) * Number(item_sell)
+
+        jQuery('#total_buying_amount').val(totalBuy);
+        jQuery('#total_amount').val(totalsell);
+
+    }
+
+ </script>
+
+{% endblock scripts %}

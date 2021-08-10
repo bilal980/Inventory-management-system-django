@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}
+Supplier
+{% endblock title %}
+
+{% block content %}
+{% include 'components/message.html' %}
+<div class="container">
+<div class="col-md-6 shadow bg-white rounded">
+    <br>
+    <a href="{% url 'list_supplier_statement' supplier.id %}"><button type="button" id="empolyee" class="btn btn-primary" id="load"
+            data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing">{{supplier|capfirst}} Statement</button></a>
+    <br>
+    <div class="content-panel">
+        <h3 class="text-center"> Add Statement</h3>
+        <div class="panel-body">
+            <form class="form-horizontal add-ledger-form"
+                action="{% url 'add_supplier_statement' supplier.id %}" method="post" autocomplete="off">
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        {% csrf_token %}
+                        <label><strong>Name</strong></label>
+                        <input type="text" class="form-control name" name="supplier_name" value="{{ supplier }}"
+                            placeholder="{{ supplier }}" readonly><br>
+                        <label><strong>Supplier Amount</strong></label>
+                        <input type="text"  pattern="[0-9]*" title="Please Enter Valid Amount" class="form-control father_name" name="supplier_amount"
+                            placeholder="Total Amount" required><br>
+                        <label><strong>Payment Amount</strong></label>
+                        <span class="mobile-error" style="color: red; display: none">this field is requried</span>
+                        <input type="text" class="form-control payment" name="payment_amount"
+                            placeholder="Payable Amount"  title="Please Enter Amount!" required pattern="[0-9]*"><br>
+                        <label><strong>description no</strong></label>
+                        <input type="text" class="form-control mobile" name="description" maxlength="100" title="Not more then 100 characters" placeholder="Description"><br>
+                        <label><strong>Date</strong></label>
+                        <input type="date" class="form-control mobile" name="date" value="{%now 'Y-m-d'%}" placeholder="Date"><br>
+
+                        <button type="submit" id="save" class="btn btn-primary ledger-submit-btn" style="float: right"
+                            id="load"
+                            data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing Order">Save
+                            Statement</button>
+                            <br>
+                            <br>
+                            
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+
+{% endblock %}

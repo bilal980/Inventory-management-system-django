@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Login{% endblock title %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/login.css'%}">
+
+{% endblock head %}
+
+{% block body %}
+
+{% include 'components/message.html' %}
+<div class="container">
+    <div class="d-flex justify-content-center h-100">
+        <div class="user_card mb-0">
+            <div class="d-flex justify-content-center">
+                <div class="brand_logo_container">
+                    <img src="{% static 'image/avatar3.png'%}" class="brand_logo" alt="Logo">
+                </div>
+
+            </div>
+            <div class="d-flex justify-content-center form_container">
+
+    
+    
+                <form action="{%url 'login'%}" method='POST'>
+                    {% csrf_token %}
+                    <div class="input-group mb-3">
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        </div>
+                    <input type="email" name="email" class="form-control input_user" placeholder="Email" required autofocus>
+                    </div>
+                    <div class="input-group mb-2">
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="fas fa-key"></i></span>
+                        </div>
+                        <input type="password" name="password" class="form-control input_pass"
+                            placeholder="password" required>
+                    </div>
+
+                    <div class="d-flex justify-content-center mt-3 login_container">
+                        <button type="submit" name="button" class="btn login_btn">Login</button>
+                    </div>
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+    <div style="color: #7e74c0;" class="d-flex justify-content-center mt-3"><h4>{{obj.Name|truncatechars:42}}</h4></div>
+</div>
+
+{% endblock body %}

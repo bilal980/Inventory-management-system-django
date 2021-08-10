@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}
+Purchase
+{% endblock title %}
+{% block content %}
+<div class="col-md-12 shadow bg-white rounded">
+    <br>
+    <a href="{% url 'add_stock_in' pk=product.id %}"><button type="button" id="stock-in" class="btn btn-primary"
+            data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing"> New Purchase</button></a>
+    <br><br>
+    <div class="content-panel table-responsive">
+        <h1 class="text-center">{{ product.name|title }} <small>{{ product.brand_name|title }}</small> Purchased Items</h1>
+        <br>
+        <table class="table table-striped table-advance table-hover item-table table-bordered">
+            <thead>
+                <tr>
+                    <th class="text-center">Quantity</th>
+                    <th class="text-center">Buying Price / Item</th>
+                    <th class="text-center">Total Buying Amount</th>
+                    <th class="text-center">Selling Price / Item</th>
+                    <th class="text-center">Total Selling Amount</th>
+                    <th class="text-center">Added Date</th>
+                    <th class="text-center">Expiry Date</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="product-table-body text-center">
+
+                {% for stockin in object_list %}
+                <tr>
+                    <td>{{ stockin.quantity|floatformat:-2 }} </td>
+                    <td class="#">{{ stockin.buying_price_item|floatformat:-2 }}</td>
+                    <td class="#">{{ stockin.total_buying_amount|floatformat:-2 }}</td>
+                    <td>{{ stockin.price_per_item|floatformat:-2 }}</td>
+                    <td>{{ stockin.total_amount|floatformat:-2 }}</td>
+                    <td>{{ stockin.dated_order }}</td>
+                    <td>{{ stockin.stock_expiry }}</td>
+                    <td>
+                        <a href="{% url 'stock_in_update' pk=stockin.id %}"><button class="btn btn-primary btn-xs"><i
+                                    class="fa fa-edit"></i></button></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% include 'components/pagination.html' %}
+
+    </div>
+</div>
+
+{% endblock %}

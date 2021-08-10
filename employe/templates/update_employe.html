@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}
+Employe
+{% endblock title %}
+
+{% block content %}
+{% include 'components/message.html' %}
+
+<div class="container">
+    <div class="col-md-6 shadow bg-white rounded">
+        <br>
+        <a href="{% url 'employe' %}"><button type="button" id="back-employe" class="btn btn-primary" id="load"
+                data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing">Employe List</button></a>
+        <br>
+        <div class="content-panel">
+            <h3 class="text-center">Edit Employe</h3>
+            <div class="panel-body">
+                <form class="form-horizontal" action="{% url 'update_employe' pk=object.id %}" method="post"
+                    autocomplete="off">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            {% csrf_token %}
+                            <label><strong>Employe Name</strong></label>
+                            <input type="text" class="form-control employe_name" name="name"
+                                placeholder="Employe Name" value="{{ object.name }}"><br>
+                            <label><strong>Father Name</strong></label>
+                            <input type="text" class="form-control employe_name" name="father_name"
+                                placeholder="Father Name" value="{{ object.father_name }}"><br>
+                            <label><strong>CNIC</strong></label>
+                            <input type="text" class="form-control employe_phone" name="cnic"
+                                 placeholder="CNIC"
+                                value="{{ object.cnic }}"><br>
+                            <label><strong>Mobile</strong></label>
+                            <input type="text" class=" form-control shop" name="mobile"
+                                placeholder="Mobile "
+                                value="{{ object.mobile }}"><br>
+                            <label><strong>Address</strong></label>
+                            <textarea name="address" class="form-control address"
+                                placeholder="employe Address (Optional)">{% if object.address %}{{ object.address }}{%endif %}</textarea><br>
+                            <input type="text" class="form-control date" name="date_of_joining" placeholder=" Date of joining"
+                                value="{% now 'Y-m-d'%}" onfocus="(this.type='date')" onblur="(this.type='text')"><br>
+                            <button type="submit" class="btn btn-primary product-sub-btn" style="float: right">Update
+                                Employe</button>
+                            <br>
+                            <br>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

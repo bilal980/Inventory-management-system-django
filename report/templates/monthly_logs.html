@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% block title %}
+Report
+{% endblock title %}
+{% block content %}
+
+<div class="container-fluid shadow bg-white border">
+    <div class="row">        
+        <div class="col-lg-12  container">
+            <br>
+            <a href="{% url 'daily_stock_logs' %}"><button type="button" id="stock-log" class="btn btn-primary" id="load"
+                    data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing">Daily Logs</button></a>
+            <h2 class="text-center">Monthly Stock Logs | <small>{{ month }} {{ year }}</small></h2>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row justify-content-md-center">
+                        <div class="custom-search-form col-md-3">
+                            <label>Search</label>
+                            <input type="text" class="form-control search-logs" placeholder="Search...">
+                        </div>
+                        <div class="custom-search-form col-md-2">
+                            <label>Year</label>
+                            <select class="form-control year" id='year_selection' placeholder="Year"></select>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Filter By Month</label>
+                            <select class="form-control month" id="month">
+                                <option value="January">January</option>
+                                <option value="February">February</option>
+                                <option value="March">March</option>
+                                <option value="April">April</option>
+                                <option value="May">May</option>
+                                <option value="June">June</option>
+                                <option value="July">July</option>
+                                <option value="August">August</option>
+                                <option value="September">September</option>
+                                <option value="October">October</option>
+                                <option value="November">November</option>
+                                <option value="December">December</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row justify-content-md-center" style="padding-top: 30px">
+                        <span><strong>Logs Date: </strong> {{ month }} {{ year }} <strong> | Total Price:</strong> Rs.{{ total|floatformat:'-2' }}<strong> | Total Invoice:</strong> {{ total_invoice|floatformat:'-2' }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+            <div class="container content-panel table-responsive ">
+                <table  class="table table-striped text-center table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th  class="text-center">Item Name</th>
+                            <th class="text-center">No. of Invoices</th>
+                            <th class="text-center">Stock Out</th>
+                        </tr>
+                    </thead>
+                    <tbody class="logs-table-body">
+                        {% if not object_list %}
+                        <tr>
+                            <td colspan="3" class="text-center">No Logs Found</td>
+                        </tr>
+                        {% endif %}
+                        {% for stock in object_list %}
+                        <tr>
+                            <td>{{ stock.product__name|title}}</td>
+                            <td>{{ stock.receipt_item|floatformat:-2}}</td>
+                            <td>{{ stock.total_qty|floatformat:-2 }} </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% include 'components/pagination.html' %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+
+{% block scripts %}
+<script>
+
+    var year= {{year}};
+
+    $(document).ready(function () {
+        // let date= Date().getFullYear()
+        for (i = 2018; i <= 2050; i += 1) {
+            if(i== year){
+                $('#year_selection').append('<option selected value=' + i + '>' + i + '</option>')
+                
+            }else{
+                $('#year_selection').append('<option value=' + i + '>' + i + '</option>')
+            }
+        }
+
+        $('#month option:contains("{{ month }}")').prop('selected', true);
+
+        $(".search-logs").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $(".logs-table-body tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+
+        $('.month,#year_selection').on('change', function () {
+            if ($('#month').val() == '') {
+                window.location.href = '{% url "monthly_stock_logs" %}'
+            } else {
+                window.location.href = '{% url "monthly_stock_logs" %}' + '?month=' + $('#month').val() + '&year=' + $('#year_selection').val() ;
+                year= $('#year_selection').val()
+            }
+        })
+    });
+
+</script>
+<script>
+    $('#stock-log').on('click', function () {
+        var $this = $(this);
+        $this.button('loading');
+        setTimeout(function () {
+            $this.button('reset');
+        }, 5000);
+    });
+
+</script>
+
+
+
+{% endblock scripts %}

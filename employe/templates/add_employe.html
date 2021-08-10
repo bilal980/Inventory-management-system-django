@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}
+Employe
+{% endblock title %}
+
+{% block content %}
+{% include 'components/message.html' %}
+
+<div class="col-8 shadow bg-white rounded">
+    <br>
+    <a href="{% url 'employe' %}"><button type="button" id="empolyee" class="btn btn-primary" id="load" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing">Employee List</button></a>
+    <br>
+    <div class="content-panel">
+        <h3 class="text-center">Add Employee</h3>
+        <div class="panel-body">
+            <br>
+            <form class="form-horizontal add-ledger-form " action="{% url 'add_employe' %}" method="post"
+                autocomplete="off">
+                <div class="row">
+                    <div class="ml-1 col-5 ">
+                        {% csrf_token %}
+                        <label><strong>Name</strong></label>
+                        <input type="text" class="form-control name" name="name" minlength="3" title="Please Enter Valid Name." placeholder="Name" required><br>
+                        <label><strong>Father Name</strong></label>
+                        <input type="text" class="form-control father_name" name="father_name"
+                            placeholder="Father Name"><br>
+                        <label><strong>Mobile Number</strong></label>
+                        <input type="text" class="form-control mobile" name="mobile" placeholder="Mobile" pattern="[0-9]*" maxlength="14" minlength="9" required><br>
+                    </div>
+
+                    <div class="ml-4 col-5">
+                        <label><strong>Address</strong></label>
+                        <textarea class="form-control address" name="address" maxlength="40" placeholder="Address"></textarea><br>
+                        
+                        <label><strong>CNIC</strong></label>
+                        <input type="text" class="form-control date" minlength="12" maxlength="16" title="Please enter Valid Number Do Not Use Dashes" pattern="[0-9]*" name="cnic" placeholder=" CNIC" ><br>
+                    
+                        <label><strong>Date of Joining</strong></label>
+                        <input type="text" class="form-control date" name="date_of_joining"
+                            placeholder=" Date of joining" value="{% now 'Y-m-d'%}" onfocus="(this.type='date')" onblur="(this.type='text')"><br>
+                        
+                        <button type="submit" id="save" class="btn btn-primary ledger-submit-btn" style="float: right"
+                            id="load"
+                            data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing Order">Save Employee</button>
+                    </div>
+                </div>
+                <br>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

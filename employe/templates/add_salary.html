@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% block title %}
+Employe
+{% endblock title %}
+{% block content %}
+{% include 'components/message.html' %}
+
+<div class="col-md-6 shadow bg-white rounded">
+    <br>
+    <a href="{% url 'employe' %}"><button type="button" id="empolyee" class="btn btn-primary" id="load"
+            data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing">Employee List</button></a>
+    <br><br><br>
+    <div class="content-panel">
+        <h3 class="text-center">{{ request.user.retailer_user.retailer.name }} Add Employee</h3>
+        <div class="panel-body">
+            <form class="form-horizontal add-ledger-form" action="{% url 'add_salary' pk=employee.pk %}"
+                method="post" autocomplete="off">
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        {% csrf_token %}
+                        <label><strong>Name</strong></label>
+                        <span class="name-error" style="color: red; display: none">this field is requried</span>
+                        <input type="text" class="form-control customer-name" name="employee_name"
+                            value="{{employee.name}}" readonly> <br>
+                        <label><strong>Salary</strong></label>
+                        <span class="salary_amount-error" style="color: red; display: none">this field is
+                            requried</span>
+                        <input type="text" class="form-control salary_amount" name="salary_amount"
+                            placeholder="Salary Amount"><br>
+                        <label><strong>Date</strong></label>
+                        <span class="date-error" style="color: red; display: none">this field is requried</span>
+                        <input type="text" class="form-control date" value="{% now 'Y-m-d'%}" name="date" placeholder=" Date"
+                            onfocus="(this.type='date')" onblur="(this.type='text')"><br>
+                        <input type="hidden" name="retailer" value="{{ request.user.retailer_user.retailer.id }}">
+                        <button type="submit" id="save" class="btn btn-primary ledger-submit-btn" style="float: right"
+                            id="load"
+                            data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing Order">Save
+                            Salary</button>
+                            <br>
+                            <br>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $('document').ready(function () {
+
+        $('.ledger-submit-btn').on('click', function () {
+            $(this).addClass('disabled');
+            $(this).html('<i class="fa fa-circle-o-notch fa-spin"></i> Loading...');
+            var error = false;
+
+            if ($('.name').val() == "") {
+                $('.name-error').show();
+                error = true;
+            }
+            else {
+                $('.name-error').hide();
+            }
+            if ($('.salary_amount').val() == "") {
+                $('.salary_amount-error').show();
+                error = true;
+            }
+            else {
+                $('.salary_amount-error').hide();
+            }
+            if ($('.date').val() == "") {
+                $('.date-error').show();
+                error = true;
+            }
+            else {
+                $('.date-error').hide();
+            }
+            if (error == true) {
+                $(this).removeClass('disabled');
+                $(this).html('Save');
+                return;
+            }
+
+            if (error == false) {
+                $('.add-ledger-form').submit();
+            }
+            else {
+                $(this).removeClass('disabled');
+                $(this).html('Save');
+                return;
+            }
+        });
+
+        $('.customer').keyup(function () {
+            $('.customer-error').hide();
+        });
+
+
+        $('.customer_phone').keyup(function () {
+            $('.customer-phone-error').hide();
+            checkDec(this);
+        });
+        function checkDec(el) {
+            var ex = /^[0-9]+\.?[0-9]*$/;
+            if (ex.test(el.value) == false) {
+                el.value = el.value.substring(0, el.value.length - 1);
+            }
+        }
+        $('.salary_amount').keyup(function () {
+            $('.salary_amount-error').hide();
+            checkDec(this);
+        });
+        function checkDec(el) {
+            var ex = /^[0-9]+\.?[0-9]*$/;
+            if (ex.test(el.value) == false) {
+                el.value = el.value.substring(0, el.value.length - 1);
+            }
+        }
+        $('.date').keyup(function () {
+            $('.date-error').hide();
+        });
+    });
+
+</script>
+<script>
+
+    $('#empolyee').on('click', function () {
+        var $this = $(this);
+        $this.button('loading');
+        setTimeout(function () {
+            $this.button('reset');
+        }, 5000);
+    });
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% block title %}
+Product
+{% endblock title %}
+{% block content %}
+{% include 'components/message.html' %}
+
+<div class="col-md-6 shadow bg-white rounded">
+    <br>
+    <a href="{% url 'stock_out_list' pk=product.id %}"><button type="button" id="stock-list" class="btn btn-primary"
+            style="float: left" id="load"
+            data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing">Stock Out History</button></a>
+    <br>
+    <div class="content-panel">
+        <h3 class="text-center"> Stock Out ({{ product.name }})</h3>
+        <div class="panel-body">
+            <form class="form-horizontal product_item_form"
+                action="{% url 'add_stock_out' product_id=product.id %}" method="post" autocomplete="off">
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        {% csrf_token %}
+                        <label><strong>Stock Out Quantity</strong></label>
+                        <span class="item-error" style="color:red; display:none">This field is required..</span>
+                        <input type="text" class="form-control stock_out_quantity" name="stock_out_quantity"
+                            onkeyup="checkDec(this);" placeholder="Stock Out Quantity" pattern="[0-9]*" required><br>
+                        <label><strong>Date Stock out </strong></label>
+                        <input type="text" class="form-control dated" value="{% now 'Y-m-d'%}" name="dated" onkeyup="checkDec(this);"
+                            placeholder="Date Stockout" onfocus="(this.type='date')" onblur="(this.type='text')"><br>
+                        <input type="hidden" name="product" value="{{ product.id }}">
+                        <button type="submit" id="save" class="btn btn-primary product-sub-btn" style="float: right"
+                            id="load"
+                            data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing Order">Save
+                            Stock</button>
+                            <br>
+                            <br>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $(".product-sub-btn").on('click', function () {
+            var error = false;
+            if ($('.stock_out_quantity').val() == "") {
+                $('.item-error').show();
+                error = true;
+            }
+            else {
+                $('.item-error').hide();
+            }
+            if (error == true) {
+
+                return;
+            }
+            else {
+                $('.product_item_form').submit();
+
+            }
+        });
+    });
+
+    $('.product-error').keyup(function () {
+        $('.product-error').hide();
+    });
+
+    function checkDec(el) {
+        var ex = /^[0-9]+\.?[0-9]*$/;
+        if (ex.test(el.value) == false) {
+            el.value = el.value.substring(0, el.value.length - 1);
+        }
+    }
+
+    $('.quantity').keyup(function () {
+        $('.item-error').hide();
+    });
+
+    function checkDec(el) {
+        var ex = /^[0-9]+\.?[0-9]*$/;
+        if (ex.test(el.value) == false) {
+            el.value = el.value.substring(0, el.value.length - 1);
+        }
+    }
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script>
+    $('#stock-list').on('click', function () {
+        var $this = $(this);
+        $this.button('loading');
+        setTimeout(function () {
+            $this.button('reset');
+        }, 5000);
+    });
+
+    $('.form-control').click(function () {
+        $('.list-error').hide();
+        checkDec(this);
+
+    });
+</script>
+<script>
+    $('#save').on('click', function () {
+        var $this = $(this);
+        $this.button('loading');
+        setTimeout(function () {
+            $this.button('reset');
+        }, 5000);
+    });
+
+    $('.form-control').click(function () {
+        $('.list-error').hide();
+        checkDec(this);
+
+    });
+</script>
+{% endblock %}

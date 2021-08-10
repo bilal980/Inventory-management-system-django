@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}
+Customer
+{% endblock title %}
+{% block content %}
+{% include 'components/message.html' %}
+<div class="container-fluid">
+<div class="col-md-6 shadow bg-white rounded" >
+    <br>
+    <a href="{% url 'customer' %}"><button id="back-customer" type="button" class="btn btn-primary" id="load"
+            data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing">Customers List</button></a>
+    <div class="content-panel">
+        <h3 class="text-center">Create New Customer</h3>
+        <div class="panel-body">
+            <form class="form-horizontal add-customer-form" action="{% url 'add_customer' %}" method="post"
+                autocomplete="off">
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        {% csrf_token %}
+                        <label><strong>Cutomer Name</strong></label>
+                        <input type="text" class="form-control customer_name" name="customer_name"
+                            placeholder="Customer Name" required maxlength="30" minlength="3" title="Please Enter Valid Name"><br>
+                        <label><strong>Cutomer Phone</strong></label>
+                        
+                        <input type="text" class="form-control customer_phone" name="customer_phone"
+                           minlength="10" placeholder="Customer Phone" pattern="[0-9]*"><br>
+                        <label><strong>Shop Name</strong></label>
+                         <input type="text" class=" form-control shop" name="shop"
+                            placeholder="Customer Shop Name (Optional)"><br>
+                        <label><strong>Address</strong></label>
+                        <textarea name="address" class="form-control address"
+                            placeholder="Customer Address (Optional)"></textarea><br>
+                        <button type="submit" class="btn btn-primary product-sub-btn" style="float: right"
+                            data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing Order">Save Customer</button>
+                            <br>
+                            <br>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+
+{% endblock %}
